@@ -12,5 +12,8 @@
 *.la
 *.a
 
-#ino build dir
+# ino build dir
 .build
+
+# Vim files
+*.swp
