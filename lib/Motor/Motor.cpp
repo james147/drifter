@@ -5,12 +5,12 @@ void Motor::_update() {
         case FORWARD:
             digitalWrite(_forward_pin, HIGH);
             digitalWrite(_reverse_pin, LOW);
-            analogWrite(_enable_pin, map(_speed, 1, 10, MIN_POWER, MAX_POWER));
+            analogWrite(_enable_pin, map(_speed, 1, 10, _min_power, _max_power));
             break;
         case REVERSE:
             digitalWrite(_forward_pin, LOW);
             digitalWrite(_reverse_pin, HIGH);
-            analogWrite(_enable_pin, map(_speed, 1, 10, MIN_POWER, MAX_POWER));
+            analogWrite(_enable_pin, map(_speed, 1, 10, _min_power, _max_power));
             break;
         case STOPPED:
             digitalWrite(_forward_pin, LOW);
@@ -32,7 +32,9 @@ Motor::Motor() :
     _state(OFF),
     _enable_pin(0),
     _forward_pin(0),
-    _reverse_pin(0) {}
+    _reverse_pin(0),
+    _max_power(255),
+    _min_power(50) {}
 
 void Motor::attach(int enable_pin, int forward_pin, int reverse_pin) {
     _enable_pin = enable_pin;
@@ -63,6 +65,16 @@ void Motor::detach() {
 void Motor::setSpeed(byte speed) {
     _speed = speed;
    _update(); 
+}
+
+void Motor::setMaxPower(byte power) {
+    _max_power = power;
+    _update();
+}
+
+void Motor::setMinPower(byte power) {
+    _min_power = power;
+    _update();
 }
 
 void Motor::forward(byte speed) {

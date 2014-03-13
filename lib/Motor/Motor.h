@@ -14,8 +14,8 @@ class Motor
             DETACHED /** The motor has not yet been attached. */
         };
         byte _speed; /** The speed of the motor, holds a value from 1 to 10. */
-        static const byte MAX_POWER = 255; /** The maximum power needed to make the motor spin. */
-        static const byte MIN_POWER = 100; /** The minimum power needed to make the motor spin. */
+        byte _max_power; /** The maximum power needed to make the motor spin. */
+        byte _min_power; /** The minimum power needed to make the motor spin. */
         State _state; /** The state the motor is currently in. */
         int _enable_pin;
         int _forward_pin;
@@ -53,6 +53,18 @@ class Motor
          *  \param speed the speed of the motor as a value from 1 to 10
          */
         void setSpeed(byte speed);
+
+        /** Sets the maximum power of the motor
+         *
+         *  \param power the power level to set the maximum power to
+         * */
+        void setMaxPower(byte power);
+
+        /** Sets the minimum power of the motor
+         *
+         *  \param power the power level to set the minimum power to
+         * */
+        void setMinPower(byte power);
 
         /** Sets the speed and direction of the motor to forward.
          *
