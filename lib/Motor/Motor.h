@@ -1,12 +1,22 @@
 #include <Arduino.h>
+#ifndef MOTOR_H
+#define MOTOR_H
 
 class Motor
 {
     private:
-        byte _speed = 0; /** The speed of the motor, holds a value from 1 to 10. */
-        const byte MAX_POWER = 255; /** The maximum power needed to make the motor spin. */
-        const byte MIN_POWER = 100; /** The minimum power needed to make the motor spin. */
-        State _state = OFF; /** The state the motor is currently in. */
+        /** The state the motor can be in. */
+        enum State {
+            FORWARD, /** Causes the motor to spin in a forward direction. */
+            REVERSE, /** Causes the motor to spin in the opposite direction to FORWARD. */
+            STOPPED, /** Causes the to activly break, if the motor supports this. */
+            OFF,     /** Turns the motor off. */
+            DETACHED /** The motor has not yet been attached. */
+        };
+        byte _speed; /** The speed of the motor, holds a value from 1 to 10. */
+        static const byte MAX_POWER = 255; /** The maximum power needed to make the motor spin. */
+        static const byte MIN_POWER = 100; /** The minimum power needed to make the motor spin. */
+        State _state; /** The state the motor is currently in. */
         int _enable_pin;
         int _forward_pin;
         int _reverse_pin;
@@ -15,13 +25,6 @@ class Motor
         void _update();
 
     public:
-        /** The state the motor can be in. */
-        enum State {
-            FORWARD, /** Causes the motor to spin in a forward direction. */
-            REVERSE, /** Causes the motor to spin in the opposite direction to FORWARD. */
-            STOPPED, /** Causes the to activly break, if the motor supports this. */
-            OFF      /** Turns the motor off. */
-        };
 
         /** Creates a motor object attached to the given pins.
          *
@@ -29,14 +32,21 @@ class Motor
          *  \param forward_pin the h-bridge pin to make the motor spin forward.
          *  \param reverse_pin the h-bridge pin to make the motor spin in reverse.
          */
-        Motor(int enable_pin, int forward_pin, int reverse_pin);
+        Motor();
 
-        /** Sets up the pins.
+        /** Attaches to the h-bridge and sets up the pins. 
          *
          * This function must be called before calling any other function and
          * is generally done in the setup() function.
          */
-        void begin();
+        void attach(int enable_pin, int forward_pin, int reverse_pin);
+
+        /** Detaches form the h-bridge, 
+         *
+         * This function must be called before calling any other function and
+         * is generally done in the setup() function.
+         */
+        void detach();
 
         /** Sets the speed of the motor.
          *
@@ -79,4 +89,6 @@ class Motor
          *  will slowly come to a stop.
          */
         void off();
-}
+};
+
+#endif // MOTOR_H
