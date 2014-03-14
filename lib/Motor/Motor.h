@@ -66,6 +66,9 @@ class Motor
          * */
         void setMinPower(byte power);
 
+        byte maxPower() { return _max_power; }
+        byte minPower() { return _min_power; }
+
         /** Sets the speed and direction of the motor to forward.
          *
          *  \param speed the speed of the motor as a value form 1 to 10
