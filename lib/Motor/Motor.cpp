@@ -22,21 +22,17 @@ void Motor::_update() {
             digitalWrite(_reverse_pin, LOW);
             digitalWrite(_enable_pin, LOW);
             break;
-        case DETACHED:
-            break;
     }
 }
 
-Motor::Motor() :
-    _speed(3),
-    _state(OFF),
-    _enable_pin(0),
-    _forward_pin(0),
-    _reverse_pin(0),
-    _max_power(255),
-    _min_power(50) {}
-
-void Motor::attach(int enable_pin, int forward_pin, int reverse_pin) {
+Motor::Motor(int enable_pin, int forward_pin, int reverse_pin) :
+        _speed(3),
+        _state(OFF),
+        _enable_pin(0),
+        _forward_pin(0),
+        _reverse_pin(0),
+        _max_power(255),
+        _min_power(50) {
     _enable_pin = enable_pin;
     _forward_pin = forward_pin;
     _reverse_pin = reverse_pin;
@@ -47,19 +43,6 @@ void Motor::attach(int enable_pin, int forward_pin, int reverse_pin) {
     digitalWrite(_forward_pin, LOW);
     digitalWrite(_reverse_pin, LOW);
     _state = OFF;
-}
-
-void Motor::detach() {
-    _state = DETACHED;
-    pinMode(_enable_pin, OUTPUT);
-    pinMode(_forward_pin, OUTPUT);
-    pinMode(_reverse_pin, OUTPUT);
-    digitalWrite(_enable_pin, LOW);
-    digitalWrite(_forward_pin, LOW);
-    digitalWrite(_reverse_pin, LOW);
-    _enable_pin = 0;
-    _forward_pin = 0;
-    _reverse_pin = 0;
 }
 
 void Motor::setSpeed(byte speed) {
