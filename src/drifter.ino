@@ -4,15 +4,18 @@
 #include <LED.h>
 #include <EEPROM.h>
 #include <Robot.h>
+//#include <Commands.h>
 
 Robot robot;
 
 void setup() {
-    Serial.begin(9600);
     robot.init();
+    //Commands.begin(9600);
+    Serial.println("HELLO");
 }
 
 void loop() {
+    delay(50);
     if (robot.button.uniquePress()) {
         if (robot.isRunning()) {
             robot.stop();
@@ -22,8 +25,3 @@ void loop() {
     }
 }
 
-String command = "";
-
-void serialEvent() {
-    
-}

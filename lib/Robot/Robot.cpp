@@ -2,9 +2,9 @@
 
 Robot::Robot() : 
         led(13), 
-        button(A0, PULLUP),
-        _left_motor(5, 8, 7),
-        _right_motor(6, 9, 4),
+        button(10, PULLUP),
+        _left_motor(6,5,4),
+        _right_motor(9, 8,7),
         _running(false),
         _speed(1),
         _state(OFF) {
