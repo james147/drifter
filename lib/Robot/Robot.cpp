@@ -1,12 +1,17 @@
 #include <Robot.h>
 
-Robot::Robot() : led(13), button(A0, PULLUP), _running(false), _speed(1), _state(OFF) {
+Robot::Robot() : 
+        led(13), 
+        button(A0, PULLUP),
+        _left_motor(5, 8, 7),
+        _right_motor(6, 9, 4),
+        _running(false),
+        _speed(1),
+        _state(OFF) {
+    loadSettings();
 }
 
 void Robot::init() {
-    _left_motor.attach(9, 8, 7);
-    _right_motor.attach(6, 5, 4);
-    loadSettings();
 }
 
 void Robot::loadSettings() {
