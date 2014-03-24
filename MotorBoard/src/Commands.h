@@ -4,7 +4,8 @@
 #define Command_H
 
 struct Command {
-  char id;
+  int id
+  char command;
   byte length;
   byte *args;
 };
@@ -15,11 +16,15 @@ public:
   SerialCommands();
   void begin(Stream *serial);
   Command next();
+  bool processSerial();
   
 private:
   Stream *_serial;
-  char _commandBuffer[];
-  byte _bufferLength;
+  char _command_buffer[255];
+  byte _buffer_length;
+  bool _escaped;
+  
+  void _parse_command();
 };
 
 void serialEvent();
