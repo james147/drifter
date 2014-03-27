@@ -3,10 +3,10 @@
 Robot::Robot() : 
         led(13), 
         button(10, PULLUP),
-        _left_motor(6,5,4),
-        _right_motor(9, 8,7),
+        _left_motor(6, 5, 4),
+        _right_motor(9, 8, 7),
         _running(false),
-        _speed(1),
+        _speed(0),
         _state(OFF) {
     loadSettings();
 }
@@ -30,18 +30,13 @@ void Robot::loadSettings() {
 void Robot::saveSettings() {
 }
 
-void Robot::forward(int speed) {
-    _speed = speed;
-    _state = FORWARD;
-    _left_motor.forward(speed);
-    _right_motor.forward(speed);
+void Robot::setSpeed(int speed) {
+    setSpeed(speed, speed);
 }
 
-void Robot::reverse(int speed) {
-    _speed = speed;
-    _state = REVERSE;
-    _left_motor.reverse(speed);
-    _right_motor.reverse(speed);
+void Robot::setSpeed(int left, int right) {
+    _left_motor.setSpeed(left);
+    _right_motor.setSpeed(right);
 }
 
 void Robot::stop() {

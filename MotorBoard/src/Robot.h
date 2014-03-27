@@ -27,6 +27,8 @@ class Robot
         void init();
         void loadSettings();
         void saveSettings();
+        void setSpeed(int speed);
+        void setSpeed(int left, int right);
         void forward(int speed);
         void reverse(int speed);
         void stop();
