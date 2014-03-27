@@ -7,24 +7,10 @@ class Motor
     public:
         /** The state the motor can be in. */
         enum State {
-            FORWARD, /** Causes the motor to spin in a forward direction. */
-            REVERSE, /** Causes the motor to spin in the opposite direction to FORWARD. */
+            MOVING,  /** Causes the motor to spin. */
             STOPPED, /** Causes the to activly break, if the motor supports this. */
             OFF      /** Turns the motor off. */
         };
-    private:
-        byte _speed; /** The speed of the motor, holds a value from 1 to 10. */
-        byte _max_power; /** The maximum power needed to make the motor spin. */
-        byte _min_power; /** The minimum power needed to make the motor spin. */
-        State _state; /** The state the motor is currently in. */
-        int _enable_pin;
-        int _forward_pin;
-        int _reverse_pin;
-
-        /** Updates the motors state to match the varibles above. */
-        void _update();
-
-    public:
 
         /** Creates a motor object attached to the given pins.
          *
@@ -36,46 +22,26 @@ class Motor
 
         /** Sets the speed of the motor.
          *
-         *  \param speed the speed of the motor as a value from 1 to 10
+         *  \param speed the speed of the motor as a value from -10 to 10
          */
-        void setSpeed(byte speed);
+        void setSpeed(int8_t speed);
 
         /** Sets the maximum power of the motor
          *
          *  \param power the power level to set the maximum power to
          * */
-        void setMaxPower(byte power);
+        void setMaxPower(uint8_t power);
 
         /** Sets the minimum power of the motor
          *
          *  \param power the power level to set the minimum power to
          * */
-        void setMinPower(byte power);
+        void setMinPower(uint8_t power);
 
         State state() { return _state; }
-        byte speed() { return _speed; }
-        byte maxPower() { return _max_power; }
-        byte minPower() { return _min_power; }
-
-        /** Sets the speed and direction of the motor to forward.
-         *
-         *  \param speed the speed of the motor as a value form 1 to 10
-         */
-        void forward(byte speed);
-
-        /** Sets the direction of the motors to forward at the current speed.
-        */
-        void forward();
-
-        /** Sets the speed and direction of the motor to reverse.
-         *
-         *  \param speed the speed of the motor as a value form 1 to 10
-         */
-        void reverse(byte speed);
-
-        /** Sets the direction of the motors to reverse at the current speed.
-        */
-        void reverse();
+        int8_t speed() { return _speed; }
+        uint8_t maxPower() { return _max_power; }
+        uint8_t minPower() { return _min_power; }
 
         /** Causes the motors to break.
          *
@@ -92,6 +58,18 @@ class Motor
          *  will slowly come to a stop.
          */
         void off();
+
+    private:
+        int8_t _speed; /** The speed of the motor, holds a value from -10 to 10. */
+        uint8_t _max_power; /** The maximum power needed to make the motor spin. */
+        uint8_t _min_power; /** The minimum power needed to make the motor spin. */
+        State _state; /** The state the motor is currently in. */
+        uint8_t _enable_pin;
+        uint8_t _forward_pin;
+        uint8_t _reverse_pin;
+
+        /** Updates the motors state to match the varibles above. */
+        void _update();
 };
 
 #endif // MOTOR_H
