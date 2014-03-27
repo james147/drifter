@@ -1,87 +1,50 @@
 #include "Commands.h"
 
-HardwareSerial *serials[3];
-
-SerialCommands::SerialCommands() : _serial(0), _bufferLength(0), _timeout(100), _escaped(false)
+SerialCommands::SerialCommands() : _serial(0), _buffer_length(0), _number_commands(0)
 {}
 
 void SerialCommands::begin(Stream *serial) {
   this->_serial = serial;
 }
 
-void SerialCommands::_parse_command()
+void SerialCommands::addCommand(char command, bool (*callback)(SerialCommands*))
 {
-  Command command;
-  command.id = word(_command_buffer[0], _command_buffer[1]);
-  command.command = _command_buffer[2];
-  
+  _commands[_number_commands++] = { command, callback };
 }
 
-bool SerialCommands::processSerial()
+void SerialCommands::processSerial()
 {
   while (Serial.available()) {
     byte in = Serial.read();
     
-    // Look for special chars is not escaped
-    if (!_escaped) {
-      switch(in) {
-        case '\\':
-          _escaped = true;
-          break;
-        case '$':
-          _buffer_length = 0;
-          break;
-        case '%':
-          _parseCommand();
-          _buffer_length = 0;
-          break;
-      }
-    } else {
-      _escaped = false;
-      if (_buffer_length == 255) {
-        return false;
-      }
+    if (in == '\r') {
+      processCommand();
+      _buffer_length = 0;
+      _command_buffer[0] = 0;
+      return;
+    }
+    if (_buffer_length == 254) {
+      Serial.println("Buffer full, clearing buffer");
       _command_buffer[_buffer_length++] = in;
+      _command_buffer[_buffer_length] = 0;
+      return;
     }
+      _command_buffer[_buffer_length++] = in;
+      _command_buffer[_buffer_length] = 0;
   }
 }
 
-Command SerialCommands::next()
+void SerialCommands::processCommand()
 {
-  // No commands waiting
-  if (!_serial->available()) {
-    return (Command){0, 0, 0};
+  if (_buffer_length < 3) {
+    Serial.print("Error: command long long enough");
+    return;
   }
-  long start_time = millis();
-  // Attempt to read the next command
-  while (true) {
-    // See if we are taking to long
-    if (millis() - start_time > _timeout) {
-      return (Command){0, 0, 0};
-    }
-    
-    int nextByte = _serial->read();
-    if (nextByte == -1) {
-      continue;
-    }
-    
-    char c = nextByte;
-    if (c == '\n') {
-      // We have found the end of the command, convert buffer into command
-      Command command;
-      command.id = _commandBuffer[0];
-      command.length = _bufferLength - 1;
-      command.args = (byte*)_commandBuffer + 1;
-      // Reset buffer
-      _bufferLength = 0;
-      return command;
-    }
-    _commandBuffer[_bufferLength] = c;
-    _bufferLength++;
-  }
-  // Command not complete, return a null command
-  return (Command){0, 0, 0};
-}
-
-void serialEvent() {
+  Serial.print("Receved: ");
+  int command_id = _command_buffer[0] << 8 | _command_buffer[1];
+  char command_char = _command_buffer[2];
+  Serial.print(command_id);
+  Serial.print(", ");
+  Serial.print(command_char);
+  Serial.println();
 }

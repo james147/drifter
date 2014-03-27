@@ -3,28 +3,27 @@
 #ifndef Command_H
 #define Command_H
 
-struct Command {
-  int id
-  char command;
-  byte length;
-  byte *args;
-};
-
 class SerialCommands
 {
 public:
   SerialCommands();
   void begin(Stream *serial);
-  Command next();
-  bool processSerial();
+  void addCommand(char command, bool (*callback)(SerialCommands*));
+  void processSerial();
   
 private:
+
+  struct Command {
+    char command;
+    bool (*callback)(SerialCommands*);
+  };
+  Command _commands[10];
+  byte _number_commands;
   Stream *_serial;
   char _command_buffer[255];
   byte _buffer_length;
-  bool _escaped;
   
-  void _parse_command();
+  void processCommand();
 };
 
 void serialEvent();
