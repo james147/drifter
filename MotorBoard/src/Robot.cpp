@@ -37,6 +37,9 @@ void Robot::setSpeed(int speed) {
 void Robot::setSpeed(int left, int right) {
     _left_motor.setSpeed(left);
     _right_motor.setSpeed(right);
+    Serial.print(left);
+    Serial.print("  ");
+    Serial.println(right);
 }
 
 void Robot::stop() {

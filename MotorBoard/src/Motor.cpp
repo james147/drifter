@@ -11,6 +11,20 @@ void Motor::_update() {
                 digitalWrite(_forward_pin, LOW);
                 digitalWrite(_reverse_pin, HIGH);
             }
+            Serial.print("Speed '");
+            Serial.print(_forward_pin);
+            Serial.print("' '");
+            Serial.print(digitalRead(_forward_pin));
+            Serial.print("' '");
+            Serial.print(_reverse_pin);
+            Serial.print("' '");
+            Serial.print(digitalRead(_reverse_pin));
+            Serial.print("' '");
+            Serial.print(_enable_pin);
+            Serial.print("' '");
+            Serial.print(digitalRead(_enable_pin));
+            Serial.print("': ");
+            Serial.println(_speed);
 
             // Make the motors move
             if (_speed == 0) {
@@ -35,9 +49,9 @@ void Motor::_update() {
 Motor::Motor(int enable_pin, int forward_pin, int reverse_pin) :
         _speed(0),
         _state(OFF),
-        _enable_pin(_enable_pin),
-        _forward_pin(_forward_pin),
-        _reverse_pin(_reverse_pin),
+        _enable_pin(enable_pin),
+        _forward_pin(forward_pin),
+        _reverse_pin(reverse_pin),
         _max_power(255),
         _min_power(50) {
     pinMode(_enable_pin, OUTPUT);
